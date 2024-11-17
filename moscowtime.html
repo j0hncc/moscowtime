@@ -63,12 +63,18 @@
             }
         }
 
+        
         function updateClock(usdPrice) {
             const satsPerDollar = Math.floor(100000000 / usdPrice);
             const hours = Math.floor(satsPerDollar / 100);
-            const minutes = (satsPerDollar % 100) * 60 /100;
+            const minutes = scaleMinutes(satsPerDollar % 100);
             const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
             document.getElementById('clock').textContent = formattedTime;
+        }
+
+        // issues/1 make minutes be between 0 and 59
+        function scaleMinutes(mm) {
+            return Math.floor(mm/100*60);
         }
 
         athPrice = 89990;  11/12/24
