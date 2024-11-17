@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moscow Time</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .clock {
+            font-size: 3rem;
+            background: #000;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock" id="clock"></div>
+
+    <script>
+        const context = new window.AudioContext();
+
+        function playFile(filepath) {
+        // see https://jakearchibald.com/2016/sounds-fun/
+        // Fetch the file
+        fetch(filepath)
+            // Read it into memory as an arrayBuffer
+            .then(response => response.arrayBuffer())
+            // Turn it from mp3/aac/whatever into raw audio data
+            .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => {
+            // Now we're ready to play!
+            const soundSource = context.createBufferSource();
+            soundSource.buffer = audioBuffer;
+            soundSource.connect(context.destination);
+            soundSource.start();
+            });
+        }
+        /*
+        let successButton = document.querySelector("#success");
+        successButton.addEventListener("click", function() {
+        playFile('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/success.mp3');
+        });
+        */
+
+        async function fetchBitcoinPrice() {
+            try {
+                const response = await fetch('https://mempool.space/api/v1/prices');
+                const data = await response.json();
+                const usdPrice = data.USD;
+                return usdPrice;
+            } catch (error) {
+                console.error('Error fetching Bitcoin price:', error);
+                return null;
+            }
+        }
+
+        function updateClock(usdPrice) {
+            const satsPerDollar = Math.floor(100000000 / usdPrice);
+            const hours = Math.floor(satsPerDollar / 100);
+            const minutes = (satsPerDollar % 100) * 60 /100;
+            const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+            document.getElementById('clock').textContent = formattedTime;
+        }
+
+        athPrice = 89990;  11/12/24
+
+        function checkATH(usdPrice) {
+            if ( usdPrice > athPrice)  {
+                console.log( "New ATH! " + usdPrice + " was " + athPrice)
+                athPrice=usdPrice
+                // playFile('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/success.mp3');
+                // playFile('boxing-bell-1-232450.mp3');
+                playFile('charming-twinkle-sound-for-fantasy-and-magic-250240.mp3');
+                // deal with CORS and autoplay policy
+                // brave-browser --autoplay-policy=no-user-gesture-required --disable-web-security --user-data-dir="/home/john/Downloads"
+
+            }
+            
+        }
+
+        async function initClock() {
+            const usdPrice = await fetchBitcoinPrice();
+            if (usdPrice !== null) {
+                console.log( "Checking " + usdPrice + "  " + athPrice)
+                updateClock(usdPrice);
+                checkATH( usdPrice);
+
+            } else {
+                document.getElementById('clock').textContent = 'Error';
+            }
+        }
+
+        initClock();
+        setInterval(initClock, 30000); // Update every x milliseconds
+    </script>
+</body>
+</html>
