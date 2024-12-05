@@ -77,11 +77,11 @@
             return Math.floor(mm/100*60);
         }
 
-        athPrice = 0;  11/12/24
+        athPrice = 104000;  // 104000 12/4/2024
 
         function checkATH(usdPrice) {
             if ( usdPrice > athPrice)  {
-                console.log( "New ATH! " + usdPrice + " was " + athPrice)
+                console.log( "New ATH! " + usdPrice + " was " + athPrice + ". " + new Date())
                 athPrice=usdPrice
                 // playFile('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/success.mp3');
                 // playFile('boxing-bell-1-232450.mp3');
@@ -96,7 +96,9 @@
         async function initClock() {
             const usdPrice = await fetchBitcoinPrice();
             if (usdPrice !== null) {
-                console.log( "Checking " + usdPrice + "  " + athPrice)
+                console.log( "Checking " + usdPrice + " against ATH " + athPrice )
+                //playFile('charming-twinkle-sound-for-fantasy-and-magic-250240.mp3');
+
                 updateClock(usdPrice);
                 checkATH( usdPrice);
 
