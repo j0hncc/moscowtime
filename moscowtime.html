@@ -71,12 +71,25 @@
             return Math.floor(mm/100*60);
         }
 
-        athPrice = 108200;  // 12/17/2024
+        function param(name, deflt) {
+            params=new URLSearchParams(window.location.search)
+            if (params.has(name)) return params.get(name)
+            // else
+            return deflt
+        }
+
+        var runningAth = null ;
+
+        function ath(){
+            if (runningAth) return runningAth;
+            runningAth=param("start_high", 108280) ; // 108280 12/17/24
+            return runningAth;
+        }
 
         function checkATH(usdPrice) {
-            if ( usdPrice > athPrice)  {
-                console.log( "New ATH! " + usdPrice + " was " + athPrice + ". " + new Date())
-                athPrice=usdPrice
+            if ( usdPrice > ath())  {
+                console.log( "New ATH! " + usdPrice + " was " + runningAth + ". " + new Date())
+                runningAth=usdPrice
                 // playFile('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/success.mp3');
                 // playFile('boxing-bell-1-232450.mp3');
                 playFile('charming-twinkle-sound-for-fantasy-and-magic-250240.mp3');
@@ -116,7 +129,7 @@
             const usdPrice = await fetchBitcoinPrice();
             chime(new Date());  // TBD 1   5 minute chimes to make sure it keeps working
             if (usdPrice !== null) {
-                console.log( "Checking " + usdPrice + " against ATH " + athPrice )
+                console.log( "Checking " + usdPrice + " against ATH " + ath() )
                 // playFile('charming-twinkle-sound-for-fantasy-and-magic-250240.mp3');
 
                 updateClock(usdPrice);
